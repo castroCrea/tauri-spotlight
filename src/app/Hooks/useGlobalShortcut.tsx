@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { isRegistered, register, unregisterAll } from '@tauri-apps/api/globalShortcut';
 import type { WebviewWindow } from "@tauri-apps/api/window"
+import useAppleScript from './useAppleScript';
 
 const SHORTCUT = 'Alt+Space'
 
 export default function useGlobalShortcut() {
+  const executeScript = useAppleScript()
   const [appWindow, setAppWindow] = useState<WebviewWindow>()
 
   // Import appWindow and save it inside the state for later usage
@@ -29,9 +31,14 @@ export default function useGlobalShortcut() {
 
       await register(SHORTCUT, async () => {
         const isVisible = await appWindow.isVisible()
-        isVisible ? appWindow.hide() : appWindow.show().then(() => {
-          appWindow.setFocus()
-        });
+        if (isVisible) {
+          appWindow.hide()
+        } else {
+          await executeScript()
+          appWindow.show().then(() => {
+            appWindow.setFocus()
+          });
+        }
         console.log('Shortcut triggered', { isVisible });
       });
     })()
@@ -39,5 +46,5 @@ export default function useGlobalShortcut() {
       unregisterAll()
 
     }
-  }, [appWindow])
+  }, [appWindow, executeScript])
 } 
