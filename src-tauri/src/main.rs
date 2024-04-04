@@ -2,15 +2,19 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::{Manager};
+use tauri::{Manager, SystemTray, SystemTrayEvent};
+mod tray;
 
 fn main() {
+  let system_tray: SystemTray = tray::get_tray();
+
   tauri::Builder::default()
+    .system_tray(system_tray)
     .setup(|app| {
 
         let main_window = app.get_window("main").unwrap();
 
-        // follow workspace on Mac OS X
+        // follow workspace on Mac OS X -> NOTE: this is not working in production
         #[cfg(target_os = "macos")]
         {
             use cocoa::appkit::{NSMainMenuWindowLevel, NSWindow, NSWindowCollectionBehavior};
@@ -34,14 +38,36 @@ fn main() {
         }
         Ok(())
     })
-    .invoke_handler(tauri::generate_handler![greet])
+    .invoke_handler(tauri::generate_handler![])
+    .on_system_tray_event(|app, event| match event {
+      SystemTrayEvent::LeftClick { .. } => {
+            let _item_handle = app.tray_handle().get_item("show");
+            let window = app.get_window("main").unwrap();
+            if window.is_visible().expect("true") {
+              _item_handle.set_title("Hide").unwrap();
+            } else {
+              _item_handle.set_title("Show").unwrap();
+            }
+      }  
+      SystemTrayEvent::MenuItemClick { id, .. } => {
+          match id.as_str() {
+            "show" => {
+              let window = app.get_window("main").unwrap();
+              if window.is_visible().expect("true") {
+                window.hide().unwrap();
+              } else {
+                window.show().unwrap();
+              }
+            }
+            "quit" => {
+              app.exit(0)
+            }
+            _ => {}
+          }
+        } 
+        _ => {}
+    })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
 
-#[tauri::command]
-fn greet(name: &str) -> String {
-    println!("Message from Rust: {}", name);
-
-   format!("Hello, {}!", name)
-}

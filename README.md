@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## TODO
 
-- [ ] Check tray menu
+- [ ] Find how to keep in all window after build
 - [ ] Check Oascript
 
 ## Getting Started
