@@ -1,15 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/tauri'
+import { useEffect } from 'react';
 import { isRegistered, register, unregisterAll } from '@tauri-apps/api/globalShortcut';
 import { appWindow } from '@tauri-apps/api/window';
 
 const SHORTCUT = 'Alt+Space'
 
-export default function Greet() {
-  const [greeting, setGreeting] = useState('');
-
+export default function useGlobalShortcut() {
   useEffect(() => {
     (async () => {
       const isOn = await isRegistered(SHORTCUT);
@@ -18,19 +15,14 @@ export default function Greet() {
 
       await register(SHORTCUT, async () => {
         const isVisible = await appWindow.isVisible()
-        isVisible ? appWindow.hide() : appWindow.show();
+        isVisible ? appWindow.hide() : appWindow.show().then(() => {
+          appWindow.setFocus()
+        });
         console.log('Shortcut triggered', { isVisible });
       });
     })()
-    invoke<string>('greet', { name: 'Next.js' })
-      .then(result => setGreeting(result))
-      .catch(console.error)
-
     return () => {
       unregisterAll()
     }
   }, [])
-
-  // Necessary because we will have to use Greet as a component later.
-  return <div>{greeting}</div>;
 }
