@@ -23,6 +23,9 @@ fn main() {
             }
         }
 
+        // remove icon from dock
+         app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
         // Dev Tool
         #[cfg(debug_assertions)] // only include this code on debug builds
         {
