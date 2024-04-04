@@ -70,7 +70,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.tauri-test.app",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

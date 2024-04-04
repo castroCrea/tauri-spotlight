@@ -1,13 +1,27 @@
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { isRegistered, register, unregisterAll } from '@tauri-apps/api/globalShortcut';
-import { appWindow } from '@tauri-apps/api/window';
+import type { WebviewWindow } from "@tauri-apps/api/window"
 
 const SHORTCUT = 'Alt+Space'
 
 export default function useGlobalShortcut() {
+  const [appWindow, setAppWindow] = useState<WebviewWindow>()
+
+  // Import appWindow and save it inside the state for later usage
+  async function setupAppWindow() {
+    const appWindow = (await import('@tauri-apps/api/window')).appWindow
+    setAppWindow(appWindow)
+  }
+
   useEffect(() => {
+    setupAppWindow()
+  }, [])
+
+  useEffect(() => {
+    if (!appWindow) return;
+
     (async () => {
       const isOn = await isRegistered(SHORTCUT);
       console.log({ isOn })
@@ -23,6 +37,7 @@ export default function useGlobalShortcut() {
     })()
     return () => {
       unregisterAll()
+
     }
-  }, [])
+  }, [appWindow])
 }
