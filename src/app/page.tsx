@@ -1,9 +1,11 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Greet from "./components/greet";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className={styles.main}>
+      <Greet />
       <div className={styles.description}>
         <p>
           Get started by editing&nbsp;
