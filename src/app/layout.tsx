@@ -16,6 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <div data-tauri-drag-region className="drag_region"></div>
       <body className={inter.className}>{children}</body>
     </html>
   );
