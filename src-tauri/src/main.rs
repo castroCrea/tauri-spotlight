@@ -13,6 +13,7 @@ fn main() {
   let system_tray: SystemTray = tray::get_tray();
 
   tauri::Builder::default()
+    .plugin(tauri_nspanel::init())
     .system_tray(system_tray)
     .setup(|app| setup::setup(app))
     .invoke_handler(tauri::generate_handler![execute_jxa_script])

@@ -18,9 +18,10 @@ tauri-build = { version = "1.5.1", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.6.1", features = [ "system-tray", "shell-open", "window-set-focus", "macos-private-api", "window-start-dragging", "window-show", "window-hide", "global-shortcut-all"] }
+tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel" }
 
 [target."cfg(target_os = \"macos\")".dependencies]
-core-graphics = { version = "0.23" }
+core-graphics = { version = "^0.23.2" }
 core-foundation = { version = "0.9.3" }
 cocoa = { version = "0.25" }
 objc = { version = "0.2.7" }
