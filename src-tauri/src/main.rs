@@ -37,6 +37,6 @@ fn execute_jxa(script: &str) -> Result<String, std::io::Error> {
 fn execute_jxa_script(script: String) -> Result<String, String> {
     match execute_jxa(&script) {
         Ok(output) => Ok(output),
-        Err(err) => Err(format!("Error executing AppleScript: {}", err)),
+        Err(err) => Ok(format!("{{error: {} }}", err)),
     }
 }
