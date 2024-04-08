@@ -34,9 +34,9 @@ export default function useGlobalShortcut() {
         if (isVisible) {
           appWindow.hide()
         } else {
-          await executeScript()
           appWindow.show().then(() => {
             appWindow.setFocus()
+            executeScript()
           });
         }
         console.log('Shortcut triggered', { isVisible });

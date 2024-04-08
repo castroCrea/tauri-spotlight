@@ -18,7 +18,7 @@ pub fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     }
 
     // remove icon from dock
-    app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+    // app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
     // Dev Tool
     #[cfg(debug_assertions)] // only include this code on debug builds
